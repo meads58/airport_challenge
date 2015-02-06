@@ -1,8 +1,10 @@
+require_relative 'weather.rb'
+
 class Airport
 
-	CAPACITY = 9
+	include Weather
 
-	attr_accessor :weather
+	CAPACITY = 9
 
 	def initialize
 		@weather = ""
@@ -32,5 +34,10 @@ class Airport
 	def full?
 		planes_in_airport.count == CAPACITY
 	end
+
+	def plane_status plane
+		plane.status
+	end
+
 
 end

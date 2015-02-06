@@ -18,12 +18,12 @@ class Plane
 		flying ? "Flying" : "Landed"
 	end
 
-	def ask_airport_to_land instruction
-		land if instruction
+	def ask_airport_to_land instructed
+		land if instructed
 	end
 
-	def ask_airport_to_fly instruction
-		fly if instruction
+	def ask_airport_to_fly instructed
+		fly if instructed
 	end
 
 end
