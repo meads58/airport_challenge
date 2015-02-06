@@ -8,18 +8,19 @@ describe Plane do
 		expect(plane.flying).to be true
 	end
 
-	it 'should be able to land' do
+	it "should not be flying when landed" do
 		plane.land
 		expect(plane.flying).not_to be true
 	end
 
-	it 'should be able to provide flying status when flying' do
-		expect(plane.status).to eq "Flying"
+	it "should have a status of landed when landed" do
+		plane.land
+		expect(plane.status).to eq("Landed")
 	end
 
-	it 'should be able to provide a landed status when landed' do
-		plane.land
-		expect(plane.status).to eq "Landed"
+	it "should have a status of flying when flying" do
+		expect(plane.status).to eq("Flying")
 	end
 
 end
+
