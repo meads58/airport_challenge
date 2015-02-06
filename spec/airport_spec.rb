@@ -2,13 +2,17 @@ require 'airport'
 
 describe Airport do
 
+	def park_planes_helper plane, number
+		number.times { airport.park_plane(plane) }
+	end
+
 	let(:airport) { Airport.new }
+	let(:plane) { double :plane }
 	let(:sunny_weather) { double :weather, status: 'Sunny' }
 	let(:stormy_weather) { double :weather, status: 'Stormy' }
 
 	it "knows when it is sunny" do
 		airport.weather_update(sunny_weather)
-		puts airport.weather
 		expect(airport.weather).to eq('Sunny')
 	end
 
@@ -38,6 +42,8 @@ describe Airport do
 	end
 
 	it "should not let a plane land if aiport is full" do
+		park_planes_helper plane, 9
+		expect{ airport.park_plane(plane) }.to raise_error(RuntimeError, 'Aiport is full')
 	end
 
 
