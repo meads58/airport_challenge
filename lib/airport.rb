@@ -6,24 +6,24 @@ class Airport
 
 	CAPACITY = 9
 
-	def initialize
-		@weather = ""
-	end
-
 	def planes_in_airport
 		@planes_in_aiprot ||= []
 	end
 
-	def weather_update weather
-		self.weather = weather.status
-	end
+	#def weather_update 
+	#	weather = what_is_the_weather
+	#end
 
-	def ok_to_land_plane 
-		weather == 'Sunny' ? true : false
+	def ok_to_land 
+		if what_is_the_weather == 'Sunny' && full? == false
+			return true
+		else
+			return false
+		end
 	end
 
 	def ok_to_take_off
-		weather == 'Sunny' ? true : false
+		what_is_the_weather == 'Sunny' ? true : false
 	end
 
 	def park_plane plane

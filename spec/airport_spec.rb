@@ -14,38 +14,30 @@ describe Airport do
 
 	let(:airport) { Airport.new }
 	let(:plane) { double :plane }
-	let(:landed_plane) { double :plane, status: "Landed"}
-	let(:flying_plane) { double :plane, status: "Flying"}
-	let(:sunny_weather) { double :weather, status: 'Sunny' }
-	let(:stormy_weather) { double :weather, status: 'Stormy' }
+	let(:landed_plane) { double :plane, status: 'Landed'}
+	let(:flying_plane) { double :plane, status: 'Flying'}
+	let(:weather) { double :weather }
+	let(:sunny_weather) { double :weather }
+	let(:stormy_weather) { double :weather }
 
-	it "knows when it is sunny" do
-		airport.weather_update(sunny_weather)
-		expect(airport.weather).to eq('Sunny')
-	end
-
-	it "knows when there is a storm" do
-		airport.weather_update(stormy_weather)
-		expect(airport.weather).to eq('Stormy')
-	end
 
 	it "should tell a plane to land when sunny" do
-		airport.weather_update(sunny_weather)
-		expect(airport.ok_to_land_plane).to be true
+		allow(airport).to receive(:what_is_the_weather).and_return('Sunny')
+		expect(airport.ok_to_land).to be true
 	end
 
 	it "should not let a plane land in a storm" do
-		airport.weather_update(stormy_weather)
-		expect(airport.ok_to_land_plane).to be false
+		allow(airport).to receive(:what_is_the_weather).and_return('Stormy')
+		expect(airport.ok_to_land).to be false
 	end
 
 	it "should allow a plane take off when sunny" do
-		airport.weather_update(sunny_weather)
+		allow(airport).to receive(:what_is_the_weather).and_return('Sunny')
 		expect(airport.ok_to_take_off).to be true
 	end
 
 	it "should not allow a plane to take off in a storm" do
-		airport.weather_update(stormy_weather)
+		allow(airport).to receive(:what_is_the_weather).and_return('Stormy')
 		expect(airport.ok_to_take_off).to be false
 	end
 
