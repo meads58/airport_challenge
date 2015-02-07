@@ -13,37 +13,54 @@ describe Airport do
 	end
 
 	let(:airport) { Airport.new }
-	let(:plane) { double :plane }
 	let(:landed_plane) { double :plane, status: 'Landed'}
 	let(:flying_plane) { double :plane, status: 'Flying'}
 	let(:weather) { double :weather }
 	let(:sunny_weather) { double :weather }
 	let(:stormy_weather) { double :weather }
 
+	context 'Airport' do
 
-	it "should tell a plane to land when sunny" do
-		allow(airport).to receive(:what_is_the_weather).and_return('Sunny')
-		expect(airport.ok_to_land).to be true
+		it "knows a plane can land" do
+			expect(flying_plane).to receive(:status).and_return('Landed')
+			airport.plane_can_land flying_plane
+		end
+
+		it "knows a plane can take off" do
+			expect(landed_plane).to receive(:status).and_return('Flying')
+			airport.plane_can_take_off landed_plane
+		end
+
 	end
 
-	it "should not let a plane land in a storm" do
-		allow(airport).to receive(:what_is_the_weather).and_return('Stormy')
-		expect(airport.ok_to_land).to be false
-	end
+	context 'Traffic Control' do
 
-	it "should allow a plane take off when sunny" do
-		allow(airport).to receive(:what_is_the_weather).and_return('Sunny')
-		expect(airport.ok_to_take_off).to be true
-	end
+		it "should be able to get the status of flying and landed plane" do
+			expect(airport.plane_status flying_plane).to eq 'Flying'
+			expect(airport.plane_status landed_plane).to eq 'Landed'
+		end
 
-	it "should not allow a plane to take off in a storm" do
-		allow(airport).to receive(:what_is_the_weather).and_return('Stormy')
-		expect(airport.ok_to_take_off).to be false
-	end
+		it "should not let a plane land in a storm" do
+			allow(airport).to receive(:what_is_the_weather).and_return('Stormy')
+			expect(airport.ok_to_land? flying_plane).to be_falsey
+			expect(flying_plane.status).to eq('Flying')
+		end
 
-	it "should not let a plane land if aiport is full" do
-		park_planes_helper plane, 9
-		expect{ airport.park_plane(plane) }.to raise_error(RuntimeError, 'Aiport is full')
+		it "should allow a plane to take off when sunny" do
+			allow(airport).to receive(:what_is_the_weather).and_return('Sunny')
+			expect(airport.ok_to_take_off? landed_plane).to be true
+		end
+
+		it "should not allow a plane to take off in a storm" do
+			allow(airport).to receive(:what_is_the_weather).and_return('Stormy')
+			expect(airport.ok_to_take_off).to be false
+		end
+
+		it "should not let a plane land if aiport is full" do
+			park_planes_helper plane, 9
+			expect{ airport.park_plane(plane) }.to raise_error(RuntimeError, 'Aiport is full')
+		end
+
 	end
 
 	it "should let 6 planes land in airport" do
@@ -54,7 +71,7 @@ describe Airport do
 	end
 
 	it "should allow 6 planes to take off" do
-		
+
 	end
 
 end

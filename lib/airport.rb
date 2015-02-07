@@ -5,25 +5,28 @@ class Airport
 	include Weather
 
 	CAPACITY = 9
+	LANDED = 'Landed'
+	FLYING = 'Flying'
+
 
 	def planes_in_airport
 		@planes_in_aiprot ||= []
 	end
 
-	#def weather_update 
-	#	weather = what_is_the_weather
-	#end
-
-	def ok_to_land 
-		if what_is_the_weather == 'Sunny' && full? == false
-			return true
-		else
-			return false
-		end
+	def plane_can_land plane
+		plane.land if plane.status == FLYING
 	end
 
-	def ok_to_take_off
-		what_is_the_weather == 'Sunny' ? true : false
+	def plane_can_take_off plane
+		plane.take_off if plane.status == LANDED
+	end
+
+	def ok_to_land? plane
+		plane_can_land plane if what_is_the_weather == 'Sunny'
+	end
+
+	def ok_to_take_off? plane
+		plane_can_take_off plane if what_is_the_weather == 'Sunny'
 	end
 
 	def park_plane plane
@@ -38,6 +41,10 @@ class Airport
 	def plane_status plane
 		plane.status
 	end
+
+
+
+
 
 
 end
