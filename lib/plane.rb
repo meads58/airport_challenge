@@ -6,16 +6,18 @@ class Plane
 		@flying = true
 	end
 #question I don't want plane to land or fly unless instructed, how to you protect these mehtods?
-	def take_off
+	def take_off!
 		@flying = true
+		self
 	end
 
-	def land
+	def land!
 		@flying = false
+		self
 	end
 
 	def status
-		flying ? "Flying" : "Landed"
+		self.flying ? "Flying" : "Landed"
 	end
 
 

@@ -2,8 +2,6 @@ require 'airport'
 
 describe Airport do
 
-	def new_planes_helper
-	end
 	def park_planes_helper plane, number
 		number.times { airport.park_plane(plane) }
 	end
@@ -15,63 +13,90 @@ describe Airport do
 	let(:airport) { Airport.new }
 	let(:landed_plane) { double :plane, status: 'Landed'}
 	let(:flying_plane) { double :plane, status: 'Flying'}
-	let(:weather) { double :weather }
-	let(:sunny_weather) { double :weather }
-	let(:stormy_weather) { double :weather }
+
+#how do you create different planes in a helper each with a different instance variable name?
+	let(:plane1) { double :plane }
+	let(:plane2) { double :plane }
+	let(:plane3) { double :plane }
+	let(:plane4) { double :plane }
+	let(:plane5) { double :plane }
+	let(:plane6) { double :plane }
+
 
 	context 'Airport' do
 
 		it "knows a plane can land" do
 			expect(flying_plane).to receive(:status).and_return('Landed')
-			airport.plane_can_land flying_plane
+			airport.land_plane flying_plane
 		end
 
-		it "knows a plane can take off" do
-			expect(landed_plane).to receive(:status).and_return('Flying')
-			airport.plane_can_take_off landed_plane
+		it "knows how to park a plane" do
+			airport.park_plane landed_plane
+			expect(airport.planes_in_airport.count).to eq 1
+		end
+
+		it "knows how to release a plane from airport" do
+			airport.park_plane landed_plane
+			expect(airport.plane_count).to eq 1
+			airport.release_plane_from_airport landed_plane
+			expect(airport.plane_count).to eq 0
+		end
+
+		it "knows a plane can take off and be released from airport" do
+			airport.park_plane landed_plane
+			expect(airport.plane_count).to eq 1
+			#expect(landed_plane).to receive(:status).and_return('Flying')
+			airport.take_off landed_plane
+			expect(airport.plane_count).to eq 0
 		end
 
 	end
 
 	context 'Traffic Control' do
 
-		it "should be able to get the status of flying and landed plane" do
+		it "should be able to get the status of flying and landed planes" do
 			expect(airport.plane_status flying_plane).to eq 'Flying'
 			expect(airport.plane_status landed_plane).to eq 'Landed'
 		end
 
 		it "should not let a plane land in a storm" do
-			allow(airport).to receive(:what_is_the_weather).and_return('Stormy')
-			expect(airport.ok_to_land? flying_plane).to be_falsey
-			expect(flying_plane.status).to eq('Flying')
+			expect(airport).to receive(:what_is_the_weather).and_return('Stormy')
+			expect(airport.ok_to_land? flying_plane).to eq 'The weather is too stormy'
+		end
+
+		it "should not allow a plane to take off in a storm" do
+			expect(airport).to receive(:what_is_the_weather).and_return('Stormy')
+			expect(airport.ok_to_take_off? landed_plane).to eq 'The weather is too stormy'
 		end
 
 		it "should allow a plane to take off when sunny" do
 			allow(airport).to receive(:what_is_the_weather).and_return('Sunny')
-			expect(airport.ok_to_take_off? landed_plane).to be true
+			expect(landed_plane).to receive(:status).and_return('Flying')
+			airport.ok_to_take_off? landed_plane
 		end
 
-		it "should not allow a plane to take off in a storm" do
-			allow(airport).to receive(:what_is_the_weather).and_return('Stormy')
-			expect(airport.ok_to_take_off).to be false
+		it "should allow a plane to land when sunny" do
+			allow(airport).to receive(:what_is_the_weather).and_return('Sunny')
+			expect(flying_plane).to receive(:status).and_return('Landed')
+			airport.ok_to_land? flying_plane
 		end
 
 		it "should not let a plane land if aiport is full" do
-			park_planes_helper plane, 9
-			expect{ airport.park_plane(plane) }.to raise_error(RuntimeError, 'Aiport is full')
+			park_planes_helper landed_plane, 9
+			expect{ airport.land_plane landed_plane }.to raise_error(RuntimeError, 'Aiport is full')
 		end
 
 	end
 
-	it "should let 6 planes land in airport" do
-		park_planes_helper landed_plane, 6
-		expect(airport.planes_in_airport.count).to eq 6
-		expect(landed_plane).to receive(:status)
-		airport.plane_status(landed_plane)
-	end
+	context 'Grand Final'
 
-	it "should allow 6 planes to take off" do
+		it "should let 6 planes land in sunny weather and 6 planes all take off in sunny weather" do
 
-	end
+
+		end
+
+		it "should allow 6 planes to take off" do
+
+		end
 
 end
