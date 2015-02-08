@@ -25,7 +25,7 @@ include Weather
 
 	def take_off plane
 			release_plane_from_airport(plane)
-			#plane.take_off!
+			plane.take_off!
 	end
 
 	def ok_to_land? plane
@@ -45,7 +45,7 @@ include Weather
 	end
 
 	def release_plane_from_airport plane
-		raise "No planes in airport" if plane_count == 0
+		raise "No planes in airport" if plane_count < 0
 		planes_in_airport.delete(plane)
 
 	end

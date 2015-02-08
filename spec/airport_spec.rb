@@ -45,7 +45,7 @@ describe Airport do
 		it "knows a plane can take off and be released from airport" do
 			airport.park_plane landed_plane
 			expect(airport.plane_count).to eq 1
-			#expect(landed_plane).to receive(:status).and_return('Flying')
+			allow(landed_plane).to receive(:take_off!)
 			airport.take_off landed_plane
 			expect(airport.plane_count).to eq 0
 		end
@@ -71,7 +71,7 @@ describe Airport do
 
 		it "should allow a plane to take off when sunny" do
 			allow(airport).to receive(:what_is_the_weather).and_return('Sunny')
-			expect(landed_plane).to receive(:status).and_return('Flying')
+			expect(landed_plane).to receive(:take_off!).and_return('Flying')
 			airport.ok_to_take_off? landed_plane
 		end
 
