@@ -5,7 +5,7 @@ class Plane
 	def initialize
 		@flying = true
 	end
-#question I don't want plane to land or fly unless instructed, how to you protect these mehtods?
+#question I don't want plane to land or fly unless instructed, how to you protect these mehtods?.
 	def take_off!
 		@flying = true
 		self
