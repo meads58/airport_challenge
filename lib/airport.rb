@@ -8,6 +8,7 @@ include Weather
 	LANDED = 'Landed'
 	FLYING = 'Flying'
 	WEATHER_BAD = 'The weather is too stormy'
+	WEATHER_GOOD = 'All clear, weather is sunny'
 
 
 	def planes_in_airport
@@ -23,17 +24,17 @@ include Weather
 		plane.land! if plane_status(plane) == FLYING
 	end
 
+#question? When release_plane_from_airport is added in I get and error see q-release in spec for example 
 	def take_off plane
-			release_plane_from_airport(plane)
 			plane.take_off!
 	end
 
-	def ok_to_land? plane
-		what_is_the_weather == 'Sunny' ? land_plane(plane) : WEATHER_BAD
+	def ok_to_land?
+		what_is_the_weather == 'Sunny' ? WEATHER_GOOD : WEATHER_BAD
 	end
 
-	def ok_to_take_off? plane
-		what_is_the_weather == 'Sunny' ? take_off(plane) : WEATHER_BAD
+	def ok_to_take_off?
+		what_is_the_weather == 'Sunny' ? WEATHER_GOOD : WEATHER_BAD
 	end
 
 	def park_plane plane
@@ -45,7 +46,7 @@ include Weather
 	end
 
 	def release_plane_from_airport plane
-		raise "No planes in airport" if plane_count < 0
+		raise "No planes in airport" if plane_count == 0
 		planes_in_airport.delete(plane)
 
 	end
