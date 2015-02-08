@@ -13,6 +13,36 @@ describe Airport do
 		number.times { airport.take_off(plane) }
 	end
 
+	def land_and_park_plane_in_sunny_weather plane, expected_plane_count
+			expect(airport).to receive(:what_is_the_weather).and_return('Sunny')
+			expect(plane).to receive(:land!)
+			airport.land_plane(plane)
+			expect(airport.plane_count).to eq expected_plane_count
+	end
+
+	def deny_landing_in_stormy_weather plane, expected_plane_count
+		expect(airport).to receive(:what_is_the_weather).and_return('Stormy')
+		expect(plane).not_to receive(:land!)
+		airport.land_plane(plane)
+		expect(airport.plane_count).to eq expected_plane_count
+	end
+
+
+	def take_off_and_release_plane_from_airport plane, expected_plane_count
+			expect(airport).to receive(:what_is_the_weather).and_return('Sunny')
+			expect(plane).to receive(:take_off!)
+			airport.take_off plane
+			expect(airport.plane_count).to eq expected_plane_count
+	end
+
+	def deny_take_off_in_stormy_weather plane, expected_plane_count
+		expect(airport).to receive(:what_is_the_weather).and_return('Stormy')
+		expect(plane).not_to receive(:take_off!)
+		airport.take_off plane
+		expect(airport.plane_count).to eq expected_plane_count
+	end
+
+
 	let(:airport) { Airport.new }
 	let(:landed_plane) { double :plane, status: 'Landed'}
 	let(:flying_plane) { double :plane, status: 'Flying'}
@@ -24,14 +54,10 @@ describe Airport do
 	let(:plane4) { double :plane }
 	let(:plane5) { double :plane }
 	let(:plane6) { double :plane }
+	let(:plane7) { double :plane }
 
 
 	context 'Airport' do
-
-		it "knows a plane can land" do
-			expect(flying_plane).to receive(:status).and_return('Landed')
-			airport.land_plane flying_plane
-		end
 
 		it "knows how to park a plane" do
 			airport.park_plane landed_plane
@@ -46,11 +72,13 @@ describe Airport do
 		end
 
 		it "knows a plane can take off and be released from airport" do
+			airport.park_plane landed_plane
+			expect(airport).to receive(:what_is_the_weather).and_return('Sunny')
 			expect(landed_plane).to receive(:take_off!)
 			airport.take_off landed_plane
 		end
 
-		it "should not release a plane if there are no planes" do 
+		it "should not release a plane if there are no planes" do
 			expect { airport.release_plane_from_airport landed_plane }.to raise_error(RuntimeError, 'No planes in airport')
 		end
 
@@ -90,16 +118,25 @@ describe Airport do
 
 	end
 
-	context 'Grand Final'
+	context 'Grand Final' do
 
 		it "should let 6 planes land in sunny weather and 6 planes all take off in sunny weather" do
-
-
+			land_and_park_plane_in_sunny_weather plane1, 1
+			land_and_park_plane_in_sunny_weather plane2, 2
+			land_and_park_plane_in_sunny_weather plane3, 3
+			land_and_park_plane_in_sunny_weather plane4, 4
+			deny_landing_in_stormy_weather plane7, 4
+			land_and_park_plane_in_sunny_weather plane5, 5
+			land_and_park_plane_in_sunny_weather plane6, 6
+			take_off_and_release_plane_from_airport plane6, 5
+			take_off_and_release_plane_from_airport plane5, 4
+			take_off_and_release_plane_from_airport plane4, 3
+			take_off_and_release_plane_from_airport plane3, 2
+			take_off_and_release_plane_from_airport plane2, 1
+			take_off_and_release_plane_from_airport plane1, 0
 		end
 
-		it "should allow 6 planes to take off" do
-
-		end
+	end
 
 end
 
@@ -113,8 +150,8 @@ it "should release and let plane take off" do
 	allow(landed_plane).to receive(:take_off!)
 	airport.take_off landed_plane
 	expect(airport.plane_count).to eq 0
-end	
-	
+end
+
 =end
 
 

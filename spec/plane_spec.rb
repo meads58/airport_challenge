@@ -3,7 +3,6 @@ require 'plane.rb'
 describe Plane do
 
 	let(:plane) { Plane.new }
-	let(:plane_landed) { Plane.new.land! }
 
 
 	it "should be flying when created" do
@@ -11,7 +10,8 @@ describe Plane do
 	end
 
 	it "should have a status of landed when landed" do
-		expect(plane_landed.status).to eq "Landed"
+		plane.land!
+		expect(plane.status).to eq "Landed"
 	end
 
 	it "should have a status of flying when flying" do
@@ -19,9 +19,9 @@ describe Plane do
 	end
 
 	it "should land and change status to 'Landed'" do
-		expect(plane_landed.status).to eq "Landed"
+		plane.land!
+		expect(plane.status).to eq "Landed"
 	end
-
 
 	it "should take off and change status to 'Flying'" do
 		plane.land!

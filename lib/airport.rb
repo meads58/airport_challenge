@@ -21,12 +21,18 @@ include Weather
 #if I change plane.land! I can't test this in aiport without require plane. What can be done?
 	def land_plane plane
 		raise "Aiport is full" if full?
-		plane.land! if plane_status(plane) == FLYING
+		if ok_to_land? == WEATHER_GOOD
+			plane.land!
+			park_plane plane
+		end
 	end
 
-#question? When release_plane_from_airport is added in I get and error see q-release in spec for example 
+#question? When release_plane_from_airport is added in I get and error see q-release in spec for example
 	def take_off plane
+		if ok_to_take_off? == WEATHER_GOOD
 			plane.take_off!
+			release_plane_from_airport plane
+		end
 	end
 
 	def ok_to_land?
