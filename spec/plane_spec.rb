@@ -9,12 +9,12 @@ describe Plane do
 		expect(plane.flying).to be true
 	end
 
-	it "should have a status of landed when landed" do
+	it "should have a status of 'Landed' when landed" do
 		plane.land!
 		expect(plane.status).to eq "Landed"
 	end
 
-	it "should have a status of flying when flying" do
+	it "should have a status of 'Flying' when flying" do
 		expect(plane.status).to eq "Flying"
 	end
 
